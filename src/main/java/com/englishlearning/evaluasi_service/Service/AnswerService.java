@@ -13,7 +13,17 @@ public class AnswerService {
     @Autowired
     private AnswerRepo answerRepo;
 
-    public Answer saveAnswer(Answer answer) { return answerRepo.save(answer); }
+    @Autowired
+    private UserServiceClient userServiceClient;
+
+    public Answer saveAnswer(String token, Answer answer) {
+
+        String studentId = userServiceClient.getUserId(token.trim());
+
+        answer.setStudentId(studentId);
+
+        return answerRepo.save(answer);
+    }
 
     public List<Answer> getAnswersByQuestionId(int questionId) {
         return answerRepo.findByExamQuestionId(questionId);
